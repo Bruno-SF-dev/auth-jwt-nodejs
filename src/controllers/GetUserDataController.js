@@ -4,14 +4,18 @@ class GetUserDataController {
   async handle(req, res) {
     const { userId } = req;
 
-    const user = await User.findOne({ _id: userId });
+    try {
+      const user = await User.findOne({ _id: userId });
 
-    const userData = {
-      id: user._id,
-      name: user.name,
-    };
+      const userData = {
+        id: user._id,
+        name: user.name,
+      };
 
-    res.send({ userData });
+      res.send({ userData });
+    } catch (err) {
+      return res.status(400).send({ error: "Failed to fetch data" });
+    }
   }
 }
 

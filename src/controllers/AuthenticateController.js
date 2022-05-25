@@ -9,13 +9,21 @@ class AuthenticateController {
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      return res.status(400).send({ error: "User not found" });
+      return res.status(400).json({
+        error: true,
+        code: "user.email",
+        message: "User not found.",
+      });
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      return res.status(400).send({ error: "Invalid password" });
+      return res.status(400).json({
+        error: true,
+        code: "user.password",
+        message: "Incorrect password.",
+      });
     }
 
     user.password = undefined;
